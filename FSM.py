@@ -1,7 +1,7 @@
 from alphabet import Alphabet
 from transaction_table import TransactionTable
 from transaction_table import FUNCTION_DICT
-from error import ValidationError
+from error import ValidationError, AlphabetError
 
 
 class FSM:
@@ -21,6 +21,8 @@ class FSM:
     def process_str(self, str_to_process):
         for symbol in str_to_process:
             alphabet_symbols = self.alphabet.get_symbol_by_value(symbol)
+            if not alphabet_symbols:
+                raise AlphabetError("Symbol not found in alphabet")
             new_state = self.transactions_table.get_possible_transition(self.current_state, alphabet_symbols)
             if not new_state:
                 raise ValidationError("Bad string")
