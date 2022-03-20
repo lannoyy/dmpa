@@ -14,7 +14,7 @@ def main(str):
         final_states=final_states,
         transactions_table=transaction_table,
     )
-    print(fsm.process_str(str))
+    return (fsm.process_str(str))
 
 if __name__ == "__main__":
     main("COST1 = (PRICE+TAxe)*0.98e-3")
