@@ -1,0 +1,35 @@
+{
+  "a-z": {
+    "symbols": "_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  },
+  "e": {
+    "symbols":"eE"
+  },
+  "+":  {
+    "symbols": "+"
+  },
+  "*": {
+    "symbols":"*"
+  },
+  "0-9": {
+    "symbols":"0123456789"
+  },
+  "(": {
+    "symbols":"("
+  },
+  ")": {
+    "symbols":")"
+  },
+  " ": {
+    "symbols":" "
+  },
+  "-": {
+    "symbols":"-"
+  },
+  ".": {
+    "symbols":"."
+  },
+  "=": {
+    "symbols":"="
+  }
+}
