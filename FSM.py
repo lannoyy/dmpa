@@ -19,16 +19,9 @@ class FSM:
 
     def process_str(self, str_to_process):
         for symbol in str_to_process:
-            alphabet_symbol = self.alphabet.get_symbol_by_value(symbol)
-            if (self.current_state == "q5" or self.current_state == "q9") and symbol in "eE":
-                alphabet_symbol = "e"
-            new_state = self.transactions_table.change_state(
-                self.current_state, alphabet_symbol
-            )
-            try:
-                function = self.transactions_table.get_function(self.current_state, new_state)
-            except KeyError:
-                raise KeyError("Item not found")
+            alphabet_symbols = self.alphabet.get_symbol_by_value(symbol)
+            new_state = self.transactions_table.get_possible_transition(self.current_state, alphabet_symbols)
+            function = self.transactions_table.get_function(self.current_state, new_state)
             if function != "None":
                 FUNCTION_DICT[function](symbol)
             self.current_state = new_state

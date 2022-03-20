@@ -181,14 +181,12 @@ class TransactionTable:
                 temp_dict.update({value: key})
         return temp_dict
 
-    def change_state(self, state: str, symbol: str):
-        """
-        Метод для перехода в новое состояние по символу
-        """
-        if symbol in self._reverse_transitions(state).keys():
-            temp_dict = self._reverse_transitions(state)
-            return temp_dict[symbol]
-        return None
-
     def get_function(self, current_state: str, new_state: str):
         return self.transactions_table[current_state][new_state]['function']
+
+    def get_possible_transition(self, state, symbols):
+        temp_dict = self._reverse_transitions(state)
+        for symbol in symbols:
+            if symbol in self._reverse_transitions(state).keys():
+                return temp_dict[symbol]
+        return None
