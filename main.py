@@ -3,7 +3,7 @@ from alphabet import Alphabet
 from transaction_table import TransactionTable
 import json
 
-if __name__ == "__main__":
+def main():
     alphabet = Alphabet("alphabet.json")
     transaction_table = TransactionTable("transaction_table.json")
     with open("final_states.json") as file:
@@ -15,3 +15,6 @@ if __name__ == "__main__":
         transactions_table=transaction_table,
     )
     print(fsm.process_str("COST1 = (PRICE+TAxe)*0.98e-3"))
+
+if __name__ == "__main__":
+    main()
