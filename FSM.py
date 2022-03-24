@@ -1,6 +1,6 @@
 from alphabet import Alphabet
 from transaction_table import TransactionTable
-from transaction_table import FUNCTION_DICT
+from transactions_funcs import FUNCTION_DICT
 from error import ValidationError, AlphabetError
 
 
