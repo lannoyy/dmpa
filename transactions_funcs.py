@@ -87,6 +87,7 @@ def make_operation(operation=None):
         operation = OPERATIONAL_STACK.pop()
     if operation == ")":
         return
+    print(VARIABLES_STORE, operation)
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
     value = ""
