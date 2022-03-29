@@ -64,53 +64,99 @@ def third_rule(code_for_optimization):
 
 def fourth_rule(code_for_optimization):
     ''' Fourth step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;"
+    fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+"
     fourth_rule = re.findall(fourth_pattern, code_for_optimization)
     # print(fourth_rule)
-    another_pattern = "LOAD [A-Za-z]+;STORE [=$0-9.A-Za-z+]+;"
-    # print(f"{code_for_optimization} Before 4")
-    # asd = 1
-    # while fourth_rule:
-    #     if fourth_rule:
-    #         for item in fourth_rule:
-    #             # print(item, 'item')
-    #             temp = item.split(';')
-    #             # print(temp)
-    #             if temp[0].split(' ')[1] != temp[1].split(' ')[1]:
-    #                 alfa = temp[0].split(' ')[1]
-    #                 beta = temp[1].split(' ')[1]
-    #                 print(f'{alfa}, alfa, {beta}beta')
-    #                 code_for_optimization = code_for_optimization.replace(temp[0] + ';', '').replace(temp[1] + ';', '').replace(beta, alfa, 0)
-    #                 # print(f"{code_for_optimization} , {asd}")
-    #                 asd += 1
-    #                 # break
-    #     fourth_rule = re.findall(fourth_pattern, code_for_optimization)
-    code = code_for_optimization.split(";")
-    while True:
-        i = 0
-        temp = code.copy()
-        for i in range(len(code) - 2):
-            # if "LOAD" in code[i] and ("ADD" in code[i + 1] or "MPY" in code[i + 1]):
-            #     temp_str = code[i].split(" ")[0]
-            #     code[i] = code[i].split(" ")[0] + code[i + 1].split(" ")[1]
-            #     code[i + 1] = temp_str + code[i + 1].split(" ")[1]
-            #     if code[i].split(" ")[0] == code[i + 1].split(" ")[0]:
-            #         code.pop(i)
-            #         code.pop(i)
-            #         break
-            #     else:
-            #         temp = code.copy()
-            if "LOAD" in code[i] and "STORE" in code[i + 1] and "LOAD" in code[i + 2]:
-                for j in range(i + 2, len(code)):
-                    if code[i + 1][5:] in code[j]:
-                        code[j] = code[j].replace(code[i + 1][5:], code[i][4:])
-                code.pop(i)
-                code.pop(i)
-                break
-        if temp == code:
-            break
-    print(';'.join(code), 'FFFF')
-    print(f"{code_for_optimization} After 4")
+    another_pattern = "[A-Z]+ [=$0-9.A-Za-z+]+;"
+    print(f"{code_for_optimization} Before 4")
+    asd = 1
+    while fourth_rule:
+        if fourth_rule:
+            for item in fourth_rule:
+                # print(item, 'item')
+                temp = item.split(';')
+                # print(temp)
+                if temp[0].split(' ')[1] != temp[1].split(' ')[1]:
+                    alfa = temp[0].split(' ')[1]
+                    beta = temp[1].split(' ')[1]
+                    # print(f'{alfa}, alfa, {beta}, beta')
+                    print("  |\n  |\nBefore Delete LOAD a")
+                    print(code_for_optimization)
+                    code_for_optimization = code_for_optimization.replace(temp[0] + ';', '', 1)
+                    print("Before Delete STORE b")
+                    print(code_for_optimization)
+                    code_for_optimization = code_for_optimization.replace(temp[1] + ';', '', 1)
+                    print("Before Replace beta with alpha")
+                    print(code_for_optimization)
+                    # print(f"\nbeta={beta}, alfa={alfa}")
+                    temp_code = code_for_optimization.split(';')
+                    print(temp_code)
+                    another_rule = re.findall(another_pattern, code_for_optimization)
+                    index_for_while = 0
+                    temp_code_for_optimization = []
+                    # print(f"STORE {beta} проверка условия")
+                    # print(another_rule and temp_code[index_for_while] != f"STORE {beta}")
+                    while another_rule and temp_code[index_for_while] != f"STORE {beta}":
+                        # print(temp_code[index_for_while])
+                        if temp_code[index_for_while].split(' ')[1] == beta:
+                            code_for_optimization = code_for_optimization.replace(beta, alfa, 1)
+                            print(temp_code[index_for_while].split(' ')[1])
+                            temp_code[index_for_while] = temp_code[index_for_while].split(' ')[0] + ' ' + alfa
+                            print(temp_code[index_for_while].split(' ')[1])
+                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
+                            print(temp_code_for_optimization)
+                            temp_code = code_for_optimization.split(';')
+                        elif temp_code[index_for_while].split(' ')[1] != beta:
+                            print("elif")
+                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
+                            # print("After Replace beta with alpha")
+                            # print(code_for_optimization)
+                            # print("  |  ")
+                            # print("  |  ")
+                        index_for_while += 1
+                        print(f"index_for_while = {index_for_while}, len(temp_code) = {len(temp_code)}")
+                        if index_for_while + 1 >= len(temp_code):
+                            print(f"я тут {temp_code[index_for_while]}")
+                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
+                            print(temp_code_for_optimization)
+                            break
+                        # another_rule = re.findall(another_pattern, ";".join(temp_code_for_optimization))
+                        print(f"ГРЯЯЯЯЯЯЯЯЯЯЯЯЯЯ {temp_code_for_optimization}")
+                    print(f"ТУУУУУУУУУУУТ {temp_code_for_optimization}")
+                    # code_for_optimization = temp_code_for_optimization
+
+                    # while
+                    # print(f"{code_for_optimization} , {asd}")
+                    # asd += 1
+                    # break
+
+        fourth_rule = re.findall(fourth_pattern, code_for_optimization)
+    # code = code_for_optimization.split(";")
+    # while True:
+    #     i = 0
+    #     temp = code.copy()
+    #     for i in range(len(code) - 2):
+    #         # if "LOAD" in code[i] and ("ADD" in code[i + 1] or "MPY" in code[i + 1]):
+    #         #     temp_str = code[i].split(" ")[0]
+    #         #     code[i] = code[i].split(" ")[0] + code[i + 1].split(" ")[1]
+    #         #     code[i + 1] = temp_str + code[i + 1].split(" ")[1]
+    #         #     if code[i].split(" ")[0] == code[i + 1].split(" ")[0]:
+    #         #         code.pop(i)
+    #         #         code.pop(i)
+    #         #         break
+    #         #     else:
+    #         #         temp = code.copy()
+    #         if "LOAD" in code[i] and "STORE" in code[i + 1] and "LOAD" in code[i + 2]:
+    #             for j in range(i + 2, len(code)):
+    #                 if code[i + 1][5:] in code[j]:
+    #                     code[j] = code[j].replace(code[i + 1][5:], code[i][4:])
+    #             code.pop(i)
+    #             code.pop(i)
+    #             break
+    #     if temp == code:
+    #         break
+    # print(';'.join(code), 'FFFF')
+    # print(f"{code_for_optimization} After 4")
     return code_for_optimization
 
 def make_operation(operation):
