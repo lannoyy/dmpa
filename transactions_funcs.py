@@ -64,7 +64,7 @@ def third_rule(code_for_optimization):
 
 def fourth_rule(code_for_optimization):
     ''' Fourth step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+"
+    fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD"
     fourth_rule = re.findall(fourth_pattern, code_for_optimization)
     # print(fourth_rule)
     another_pattern = "[A-Z]+ [=$0-9.A-Za-z+]+;"
@@ -80,49 +80,36 @@ def fourth_rule(code_for_optimization):
                     alfa = temp[0].split(' ')[1]
                     beta = temp[1].split(' ')[1]
                     # print(f'{alfa}, alfa, {beta}, beta')
-                    print("  |\n  |\nBefore Delete LOAD a")
-                    print(code_for_optimization)
+                    # print("  |\n  |\nBefore Delete LOAD a")
+                    # print(code_for_optimization)
                     code_for_optimization = code_for_optimization.replace(temp[0] + ';', '', 1)
-                    print("Before Delete STORE b")
-                    print(code_for_optimization)
+                    # print("Before Delete STORE b")
+                    # print(code_for_optimization)
                     code_for_optimization = code_for_optimization.replace(temp[1] + ';', '', 1)
-                    print("Before Replace beta with alpha")
-                    print(code_for_optimization)
+                    # print("Before Replace beta with alpha")
+                    # print(code_for_optimization)
                     # print(f"\nbeta={beta}, alfa={alfa}")
                     temp_code = code_for_optimization.split(';')
-                    print(temp_code)
+                    # print(temp_code)
                     another_rule = re.findall(another_pattern, code_for_optimization)
                     index_for_while = 0
-                    temp_code_for_optimization = []
                     # print(f"STORE {beta} проверка условия")
                     # print(another_rule and temp_code[index_for_while] != f"STORE {beta}")
                     while another_rule and temp_code[index_for_while] != f"STORE {beta}":
                         # print(temp_code[index_for_while])
                         if temp_code[index_for_while].split(' ')[1] == beta:
+                            # print(f"какой индекс в if = {index_for_while}")
                             code_for_optimization = code_for_optimization.replace(beta, alfa, 1)
-                            print(temp_code[index_for_while].split(' ')[1])
+                            # print(temp_code[index_for_while].split(' ')[1])
                             temp_code[index_for_while] = temp_code[index_for_while].split(' ')[0] + ' ' + alfa
-                            print(temp_code[index_for_while].split(' ')[1])
-                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
-                            print(temp_code_for_optimization)
-                            temp_code = code_for_optimization.split(';')
-                        elif temp_code[index_for_while].split(' ')[1] != beta:
-                            print("elif")
-                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
-                            # print("After Replace beta with alpha")
-                            # print(code_for_optimization)
-                            # print("  |  ")
-                            # print("  |  ")
+                        # print(f"index_for_while = {index_for_while}, len(temp_code) = {len(temp_code)}, часть = {temp_code[index_for_while]}")
                         index_for_while += 1
-                        print(f"index_for_while = {index_for_while}, len(temp_code) = {len(temp_code)}")
                         if index_for_while + 1 >= len(temp_code):
-                            print(f"я тут {temp_code[index_for_while]}")
-                            temp_code_for_optimization.append(temp_code[index_for_while].split(' ')[0] + ' ' + temp_code[index_for_while].split(' ')[1])
-                            print(temp_code_for_optimization)
                             break
-                        # another_rule = re.findall(another_pattern, ";".join(temp_code_for_optimization))
-                        print(f"ГРЯЯЯЯЯЯЯЯЯЯЯЯЯЯ {temp_code_for_optimization}")
-                    print(f"ТУУУУУУУУУУУТ {temp_code_for_optimization}")
+                        # print(f"\n\n{code_for_optimization}")
+                        # print(";".join(temp_code))
+                        # print("\n\n")
+                        another_rule = re.findall(another_pattern, code_for_optimization)
                     # code_for_optimization = temp_code_for_optimization
 
                     # while
@@ -163,8 +150,6 @@ def make_operation(operation):
     # global index
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
-    # print(f"right = {type(right)} left = {type(left)}")
-    # print(operation)
     if operation == "+":
         if right.rfind("$") != -1 and left.rfind("$") != -1:
             index = max(int(right[right.rfind("$") + 1]), int(left[left.rfind("$") + 1])) + 1
@@ -227,11 +212,12 @@ def add_variable():
 
 def optimization():
     code_for_optimization = VARIABLES_STORE[0]
+    # print(f"\nCode before optimization\n{code_for_optimization}\n")
     code_for_optimization = first_rule(code_for_optimization)
     code_for_optimization = second_rule(code_for_optimization)
     code_for_optimization = third_rule(code_for_optimization)
     code_for_optimization = fourth_rule(code_for_optimization)
-    print(code_for_optimization)
+    print(f"\nCode after optimization\n{code_for_optimization}\n")
 
 def finish_function():
 
