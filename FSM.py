@@ -1,7 +1,8 @@
 from alphabet import Alphabet
 from transaction_table import TransactionTable
-from transactions_funcs import FUNCTION_DICT
+from transactions_funcs import FUNCTION_DICT, STACK_DICT
 from error import ValidationError, AlphabetError
+
 
 
 class FSM:
@@ -26,9 +27,16 @@ class FSM:
             new_state = self.transactions_table.get_possible_transition(self.current_state, alphabet_symbols)
             if not new_state:
                 raise ValidationError("Bad string")
-            function = self.transactions_table.get_function(self.current_state, new_state)
-            if function != "None":
-                FUNCTION_DICT[function](symbol)
+            functions = self.transactions_table.get_function(self.current_state, new_state)
+            stack, symbol_for_stack = self.transactions_table.get_stack_with_symbol(self.current_state, new_state)
             self.current_state = new_state
+            for stack_operation in stack:
+                if symbol_for_stack != "current_symbol":
+                    STACK_DICT[stack_operation](symbol_for_stack)
+                else:
+                    STACK_DICT[stack_operation](symbol)
+            for function in functions:
+                if function != "None":
+                    FUNCTION_DICT[function]()
         return self.current_state in self.final_states["final_states"] and FUNCTION_DICT["FINISH_FUNCTION"]()
 

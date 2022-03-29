@@ -36,3 +36,7 @@ class TransactionTable:
             if symbol in temp_dict.keys():
                 return temp_dict[symbol]
         return None
+
+    def get_stack_with_symbol(self, current_state: str, new_state: str):
+        return self.transactions_table[current_state][new_state]['action_with_stack'], \
+               self.transactions_table[current_state][new_state]['symbol_for_stack'],

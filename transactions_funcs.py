@@ -1,10 +1,18 @@
 import re
 
-CYCLE_BREAK_STORE = []
-OPERATION_STORE = []
-VARIABLE_NAME_STORE = []
 VARIABLES_STORE = []
 index = 1
+
+OPERATIONAL_STACK = []
+VARIABLES_STACK = []
+CYCLE_BREAK_STACK = []
+
+
+STACK_DICT = {
+    "PUSH_TO_VARIABLE_STACK": VARIABLES_STACK.append,
+    "PUSH_TO_OPERATIONAL_STACK": OPERATIONAL_STACK.append,
+    "PUSH_TO_CYCLE_BREAK_STACK": CYCLE_BREAK_STACK.append,
+}
 
 def is_number(str):
     try:
@@ -73,78 +81,68 @@ def fourth_rule(code_for_optimization):
         fourth_rule = re.findall(another_pattern, code_for_optimization)
     return code_for_optimization
 
-def make_operation(operation):
+def make_operation(operation=None):
     global index
+    if not operation:
+        operation = OPERATIONAL_STACK.pop()
+    if operation == ")":
+        return
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
+    value = ""
     if operation == "+":
         value = f"{right};STORE ${index};LOAD {left};ADD ${index}"
     elif operation == "*":
         value = f"{right};STORE ${index};LOAD {left};MPY ${index}"
     elif operation == "=":
         value = f"LOAD {right};STORE {left}"
-    VARIABLE_NAME_STORE.append(value)
-    add_variable()
+    VARIABLES_STORE.append(value)
+    print(VARIABLES_STORE)
     index += 1
 
 
-def add_operation(current_symbol):
-    add_variable()
-    if current_symbol == " ":
-        return
-    elif current_symbol == "(":
-        CYCLE_BREAK_STORE.append(current_symbol)
-    elif current_symbol == ")":
-        operation = OPERATION_STORE.pop()
-        CYCLE_BREAK_STORE.pop()
-        while operation != "(":
-            make_operation(operation)
-            operation = OPERATION_STORE.pop()
-    elif current_symbol == "+" and OPERATION_STORE[-1] == "*":
-        make_operation(OPERATION_STORE.pop())
-    if (current_symbol != ')'):
-        OPERATION_STORE.append(current_symbol)
-
-
-def collect_variable_name(current_symbol):
-    VARIABLE_NAME_STORE.append(current_symbol)
-
-
 def add_variable():
-    if not VARIABLE_NAME_STORE:
+    if not VARIABLES_STACK:
         return
-    temp_name = "".join(VARIABLE_NAME_STORE)
+    temp_name = "".join(VARIABLES_STACK)
     if is_number(temp_name):
         temp_name = f"={temp_name}"
     VARIABLES_STORE.append(temp_name)
+    VARIABLES_STACK.clear()
 
-    VARIABLE_NAME_STORE.clear()
+def bracket_operation():
+    print(OPERATIONAL_STACK, "AFTER POP")
+    operation = OPERATIONAL_STACK.pop()
+    print(OPERATIONAL_STACK, "AFTER POP")
+    if operation == ")":
+        CYCLE_BREAK_STACK.pop()
+        while operation != "(":
+            make_operation(operation)
+            operation = OPERATIONAL_STACK.pop()
+
 
 
 def optimization():
     code_for_optimization = VARIABLES_STORE[0]
+    print(code_for_optimization)
     code_for_optimization = first_rule(code_for_optimization)
     code_for_optimization = second_rule(code_for_optimization)
     code_for_optimization = third_rule(code_for_optimization)
     code_for_optimization = fourth_rule(code_for_optimization)
-    print(code_for_optimization)
 
 def finish_function():
-
     add_variable()
-    operation = OPERATION_STORE.pop()
-    while operation:
-        make_operation(operation)
-        if not OPERATION_STORE:
+    while OPERATIONAL_STACK:
+        make_operation()
+        if not OPERATIONAL_STACK:
             break
-        operation = OPERATION_STORE.pop()
     optimization()
-    return not CYCLE_BREAK_STORE
+    return not CYCLE_BREAK_STACK
 
 
 FUNCTION_DICT = {
-    "ADD_OPERATION": add_operation,
-    "COLLECT_VARIABLE_NAME": collect_variable_name,
     "ADD_VARIABLE": add_variable,
-    "FINISH_FUNCTION": finish_function
+    "FINISH_FUNCTION": finish_function,
+    "MAKE_OPERATION": make_operation,
+    "BRACKET_OPERATION": bracket_operation
 }

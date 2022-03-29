@@ -2,145 +2,205 @@
   "q0": {
     "q0": {
       "symbol": " ",
-      "function": "None"
+      "function": ["None"],
+      "action_with_stack": [],
+      "symbol_for_stack": "None"
     },
     "q1": {
       "symbol": "a-z",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q1": {
     "q1": {
       "symbol": "a-z,0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q2": {
       "symbol": " ",
-      "function": "None"
+      "function": ["None"],
+      "action_with_stack": [],
+      "symbol_for_stack": "None"
     },
     "q3": {
       "symbol": "=",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q2": {
     "q2": {
       "symbol": " ",
-      "function": "None"
+      "function": ["None"],
+      "action_with_stack": [],
+      "symbol_for_stack": "None"
     },
     "q3": {
       "symbol": "=",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q3": {
     "q3": {
       "symbol": " ,(",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": "("
     },
     "q4": {
       "symbol": "a-z",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q5": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q4": {
     "q3": {
       "symbol": "+,*",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "MAKE_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q4": {
       "symbol": "a-z,0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q6": {
       "symbol": " ,)",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "BRACKET_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": ")"
     }
   },
   "q5": {
     "q3": {
       "symbol": "+,*",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "MAKE_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q5": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q6": {
       "symbol": " ,)",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "BRACKET_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": ")"
     },
     "q7": {
       "symbol": ".",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q8": {
       "symbol": "e",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q6": {
     "q3": {
       "symbol": "+,*",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "MAKE_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q6": {
       "symbol": " ,)",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "BRACKET_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": ")"
     }
   },
   "q7": {
     "q9": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q8": {
     "q10": {
       "symbol": "+,-",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q11": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q9": {
     "q3": {
       "symbol": "+,*",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "MAKE_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q8": {
       "symbol": "e",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q9": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q10": {
     "q11": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   },
   "q11": {
     "q3": {
       "symbol": "+,*",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "MAKE_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
+      "symbol_for_stack": "current_symbol"
     },
     "q6": {
       "symbol": " ,)",
-      "function": "ADD_OPERATION"
+      "function": ["ADD_VARIABLE", "BRACKET_OPERATION"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": ")"
     },
     "q11": {
       "symbol": "0-9",
-      "function": "COLLECT_VARIABLE_NAME"
+      "function": ["None"],
+      "action_with_stack": ["PUSH_TO_VARIABLE_STACK"],
+      "symbol_for_stack": "current_symbol"
     }
   }
 }
