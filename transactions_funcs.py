@@ -87,7 +87,6 @@ def make_operation(operation=None):
         operation = OPERATIONAL_STACK.pop()
     if operation == ")":
         return
-    print(VARIABLES_STORE, operation)
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
     value = ""
@@ -98,7 +97,6 @@ def make_operation(operation=None):
     elif operation == "=":
         value = f"LOAD {right};STORE {left}"
     VARIABLES_STORE.append(value)
-    print(VARIABLES_STORE)
     index += 1
 
 
@@ -112,14 +110,13 @@ def add_variable():
     VARIABLES_STACK.clear()
 
 def bracket_operation():
-    print(OPERATIONAL_STACK, "AFTER POP")
     operation = OPERATIONAL_STACK.pop()
-    print(OPERATIONAL_STACK, "AFTER POP")
     if operation == ")":
         CYCLE_BREAK_STACK.pop()
         while operation != "(":
             make_operation(operation)
             operation = OPERATIONAL_STACK.pop()
+
 
 
 
@@ -144,6 +141,5 @@ def finish_function():
 FUNCTION_DICT = {
     "ADD_VARIABLE": add_variable,
     "FINISH_FUNCTION": finish_function,
-    "MAKE_OPERATION": make_operation,
     "BRACKET_OPERATION": bracket_operation
 }
