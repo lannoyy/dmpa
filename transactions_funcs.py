@@ -15,7 +15,7 @@ def is_number(str):
 
 def first_rule(code_for_optimization):
     ''' First step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    first_pattern = "LOAD [=$0-9.A-Za-z+]+;ADD [=$0-9.A-Za-z+]+;"
+    first_pattern = "LOAD [=$0-9.A-Za-z+-]+;ADD [=$0-9.A-Za-z+-]+;"
     first_rule = re.findall(first_pattern, code_for_optimization)
     resultCodeArray = VARIABLES_STORE[0].split(';')
     if first_rule:
@@ -30,7 +30,7 @@ def first_rule(code_for_optimization):
 
 def second_rule(code_for_optimization):
     ''' Second step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    second_pattern = "LOAD [=$0-9.A-Za-z+]+;MPY [=$0-9.A-Za-z+]+;"
+    second_pattern = "LOAD [=$0-9.A-Za-z+-]+;MPY [=$0-9.A-Za-z+-]+;"
     second_rule = re.findall(second_pattern, code_for_optimization)
     resultCodeArray = VARIABLES_STORE[0].split(';')
     if second_rule:
@@ -45,7 +45,7 @@ def second_rule(code_for_optimization):
 
 def third_rule(code_for_optimization):
     ''' Third step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    third_pattern = "STORE [=$0-9.A-Za-z+]+;LOAD [=$0-9.A-Za-z+]+;"
+    third_pattern = "STORE [=$0-9.A-Za-z+-]+;LOAD [=$0-9.A-Za-z+-]+;"
     third_rule = re.findall(third_pattern, code_for_optimization)
     item_pattern = "[$.0-9]+"
     resultCodeArray = VARIABLES_STORE[0].split(';')
@@ -62,9 +62,9 @@ def third_rule(code_for_optimization):
 
 def fourth_rule(code_for_optimization):
     ''' Fourth step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD"
+    fourth_pattern = "LOAD [=$0-9.A-Za-z+-]+;STORE [=$0-9.A-Za-z+-]+;LOAD"
     fourth_rule = re.findall(fourth_pattern, code_for_optimization)
-    another_pattern = "[A-Z]+ [=$0-9.A-Za-z+]+;"
+    another_pattern = "[A-Z]+ [=$0-9.A-Za-z+-]+;"
     print(f"{code_for_optimization} Before 4")
     while fourth_rule:
         if fourth_rule:

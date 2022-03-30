@@ -18,6 +18,7 @@ from error import ValidationError, AlphabetError
     "COST = (PRICE-TAX)*0.98e-+3",
     "COST = (PRICE+TAXE)*0.98+(1+2)*3E+10", #должно быть всего 3 $
     "COST = x+1*(PRICE+TAX)*0.98+y",
+    "COST = x       +     1    *    (   PRICE   +    TAX   )    *    0.98     +   y",
     "123",
     " ",
     "",

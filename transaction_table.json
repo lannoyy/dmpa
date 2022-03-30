@@ -114,6 +114,10 @@
       "symbol": "+,*",
       "function": "ADD_OPERATION"
     },
+    "q6": {
+      "symbol": " ,)",
+      "function": "ADD_OPERATION"
+    },
     "q8": {
       "symbol": "e",
       "function": "COLLECT_VARIABLE_NAME"
