@@ -4,7 +4,6 @@ from transaction_table import TransactionTable
 import json
 
 def main(str):
-    print("COST = x+1*(PRICE+TAX)*0.98+y") #удалить
     alphabet = Alphabet("alphabet.json")
     transaction_table = TransactionTable("transaction_table.json")
     with open("final_states.json") as file:
@@ -18,4 +17,4 @@ def main(str):
     return (fsm.process_str(str))
 
 if __name__ == "__main__":
-    main("COST = x+1*(3E-10+TAX)*0.98+y")
+    main("COST = (PRICE+TAX)*0..98e-3")

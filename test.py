@@ -7,7 +7,6 @@ from error import ValidationError, AlphabetError
     "COST = PRICE+TAX",
     "  _COST  =  (  PRICE  +  TAX  )  ",
     "COST1_1_1 = ((((PRICE+TAXeE))))*0.98e-3",
-    "COST = (PRICE+TAX)*00.98e+3",
     "COST = (PRICE+TAX)*0.98e3",
     "COST = (PRICE*TAX)+0.98e-333",
     "COST == (PRICE+TAX)*0.98e-3",

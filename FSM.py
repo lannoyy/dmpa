@@ -19,16 +19,18 @@ class FSM:
         self.stack = []
 
     def process_str(self, str_to_process):
+        position = 1
         for symbol in str_to_process:
             alphabet_symbols = self.alphabet.get_symbol_by_value(symbol)
             if not alphabet_symbols:
-                raise AlphabetError("Symbol not found in alphabet")
+                raise AlphabetError(f"Symbol not found in alphabet, position {(position)}")
             new_state = self.transactions_table.get_possible_transition(self.current_state, alphabet_symbols)
             if not new_state:
-                raise ValidationError("Bad string")
+                raise ValidationError(f"Bad string, position {(position)})")
             function = self.transactions_table.get_function(self.current_state, new_state)
             if function != "None":
                 FUNCTION_DICT[function](symbol)
             self.current_state = new_state
+            position += 1
         return self.current_state in self.final_states["final_states"] and FUNCTION_DICT["FINISH_FUNCTION"]()
 
