@@ -4,7 +4,7 @@ CYCLE_BREAK_STORE = []
 OPERATION_STORE = []
 VARIABLE_NAME_STORE = []
 VARIABLES_STORE = []
-# index = 0
+index = 0
 
 def is_number(str):
     try:
@@ -15,10 +15,9 @@ def is_number(str):
 
 def first_rule(code_for_optimization):
     ''' First step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    first_pattern = "LOAD [$0-9.A-Za-z]+;ADD [$0-9.A-Za-z]+;"
+    first_pattern = "LOAD [=$0-9.A-Za-z+]+;ADD [=$0-9.A-Za-z+]+;"
     first_rule = re.findall(first_pattern, code_for_optimization)
     resultCodeArray = VARIABLES_STORE[0].split(';')
-    # print(f"{code_for_optimization} Before 1")
     if first_rule:
         for i in first_rule:
             item = i.split(';')[1]
@@ -26,28 +25,27 @@ def first_rule(code_for_optimization):
                 alfa = i.split(";")[0].split(" ")[1]
                 beta = i.split(";")[1].split(" ")[1]
                 code_for_optimization = code_for_optimization.replace(i, f"LOAD {beta};ADD {alfa};")
-    # print(f"{code_for_optimization} After 1")
+    print(f"{code_for_optimization} After 1")
     return code_for_optimization
 
 def second_rule(code_for_optimization):
     ''' Second step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    second_pattern = "LOAD [$0-9.A-Za-z]+;MPY [$0-9.A-Za-z]+;"
+    second_pattern = "LOAD [=$0-9.A-Za-z+]+;MPY [=$0-9.A-Za-z+]+;"
     second_rule = re.findall(second_pattern, code_for_optimization)
     resultCodeArray = VARIABLES_STORE[0].split(';')
-    # print(f"{code_for_optimization} Before 2")
     if second_rule:
         for i in second_rule:
             item = i.split(';')[1]
             if resultCodeArray.count(item) < 2:
                 alfa = i.split(";")[0].split(" ")[1]
                 beta = i.split(";")[1].split(" ")[1]
-                code_for_optimization = code_for_optimization.replace(item, f"LOAD {beta};MRY {alfa};")
-    # print(f"{code_for_optimization} After 2")
+                code_for_optimization = code_for_optimization.replace(i, f"LOAD {beta};MPY {alfa};")
+    print(f"{code_for_optimization} After 2")
     return code_for_optimization
 
 def third_rule(code_for_optimization):
     ''' Third step in code optimization, for more info look for table 2.4 in methodical instructions '''
-    third_pattern = "STORE [$0-9.A-Za-z]+;LOAD [$0-9.A-Za-z]+;"
+    third_pattern = "STORE [=$0-9.A-Za-z+]+;LOAD [=$0-9.A-Za-z+]+;"
     third_rule = re.findall(third_pattern, code_for_optimization)
     item_pattern = "[$.0-9]+"
     resultCodeArray = VARIABLES_STORE[0].split(';')
@@ -59,23 +57,19 @@ def third_rule(code_for_optimization):
             if len(list(filter(lambda item: item.split(' ')[1] == i.split(';')[0].split(' ')[1], resultCodeArray))) < 3 \
                     and re.findall(item_pattern, i)[0] == re.findall(item_pattern, i)[1]:
                 code_for_optimization = code_for_optimization.replace(i, '')
-    # print(f"{code_for_optimization} After 3")
+    print(f"{code_for_optimization} After 3")
     return code_for_optimization
 
 def fourth_rule(code_for_optimization):
     ''' Fourth step in code optimization, for more info look for table 2.4 in methodical instructions '''
     fourth_pattern = "LOAD [=$0-9.A-Za-z+]+;STORE [=$0-9.A-Za-z+]+;LOAD"
     fourth_rule = re.findall(fourth_pattern, code_for_optimization)
-    # print(fourth_rule)
     another_pattern = "[A-Z]+ [=$0-9.A-Za-z+]+;"
     print(f"{code_for_optimization} Before 4")
-    asd = 1
     while fourth_rule:
         if fourth_rule:
             for item in fourth_rule:
-                # print(item, 'item')
                 temp = item.split(';')
-                # print(temp)
                 if temp[0].split(' ')[1] != temp[1].split(' ')[1]:
                     alfa = temp[0].split(' ')[1]
                     beta = temp[1].split(' ')[1]
@@ -111,43 +105,11 @@ def fourth_rule(code_for_optimization):
                         # print("\n\n")
                         another_rule = re.findall(another_pattern, code_for_optimization)
                     # code_for_optimization = temp_code_for_optimization
-
-                    # while
-                    # print(f"{code_for_optimization} , {asd}")
-                    # asd += 1
-                    # break
-
         fourth_rule = re.findall(fourth_pattern, code_for_optimization)
-    # code = code_for_optimization.split(";")
-    # while True:
-    #     i = 0
-    #     temp = code.copy()
-    #     for i in range(len(code) - 2):
-    #         # if "LOAD" in code[i] and ("ADD" in code[i + 1] or "MPY" in code[i + 1]):
-    #         #     temp_str = code[i].split(" ")[0]
-    #         #     code[i] = code[i].split(" ")[0] + code[i + 1].split(" ")[1]
-    #         #     code[i + 1] = temp_str + code[i + 1].split(" ")[1]
-    #         #     if code[i].split(" ")[0] == code[i + 1].split(" ")[0]:
-    #         #         code.pop(i)
-    #         #         code.pop(i)
-    #         #         break
-    #         #     else:
-    #         #         temp = code.copy()
-    #         if "LOAD" in code[i] and "STORE" in code[i + 1] and "LOAD" in code[i + 2]:
-    #             for j in range(i + 2, len(code)):
-    #                 if code[i + 1][5:] in code[j]:
-    #                     code[j] = code[j].replace(code[i + 1][5:], code[i][4:])
-    #             code.pop(i)
-    #             code.pop(i)
-    #             break
-    #     if temp == code:
-    #         break
-    # print(';'.join(code), 'FFFF')
-    # print(f"{code_for_optimization} After 4")
     return code_for_optimization
 
 def make_operation(operation):
-    # global index
+    global index
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
     if operation == "+":
@@ -212,7 +174,7 @@ def add_variable():
 
 def optimization():
     code_for_optimization = VARIABLES_STORE[0]
-    # print(f"\nCode before optimization\n{code_for_optimization}\n")
+    print(f"\nCode before optimization\n{code_for_optimization}\n")
     code_for_optimization = first_rule(code_for_optimization)
     code_for_optimization = second_rule(code_for_optimization)
     code_for_optimization = third_rule(code_for_optimization)
@@ -224,11 +186,7 @@ def finish_function():
     add_variable()
     operation = OPERATION_STORE.pop()
     while operation:
-        if operation == "+" and OPERATION_STORE[-1] == '*':
-            make_operation(operation)
-            OPERATION_STORE.append(operation)
-        else:
-            make_operation(operation)
+        make_operation(operation)
         if not OPERATION_STORE:
             break
         operation = OPERATION_STORE.pop()
