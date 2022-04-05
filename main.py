@@ -17,7 +17,4 @@ def main(str):
     return (fsm.process_str(str))
 
 if __name__ == "__main__":
-    main("COST=(PRICE+TAXE)*0.98")
-
-
-#Чтобы переделать на дмпа нужно вшить действия со стеком на уровне автомата
+    main("COST= ((x + 1 * (PRICE + TAX) * 0.98E-10) + y)")

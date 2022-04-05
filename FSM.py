@@ -20,21 +20,29 @@ class FSM:
         self.stack = []
 
     def process_str(self, str_to_process):
+        position = 1
         for symbol in str_to_process:
             alphabet_symbols = self.alphabet.get_symbol_by_value(symbol)
             if not alphabet_symbols:
                 raise AlphabetError("Symbol not found in alphabet")
             new_state = self.transactions_table.get_possible_transition(self.current_state, alphabet_symbols)
             if not new_state:
+                print(position, symbol, self.current_state)
                 raise ValidationError("Bad string")
             functions = self.transactions_table.get_function(self.current_state, new_state)
             stack, symbol_for_stack = self.transactions_table.get_stack_with_symbol(self.current_state, new_state)
             self.current_state = new_state
+            flag = 0
             for stack_operation in stack:
-                if symbol_for_stack != "current_symbol":
+                if symbol_for_stack == "current_symbol":
+                    STACK_DICT[stack_operation](symbol)
+                elif symbol == symbol_for_stack:
                     STACK_DICT[stack_operation](symbol_for_stack)
                 else:
-                    STACK_DICT[stack_operation](symbol)
+                    flag = 1
+            position += 1
+            if flag == 1:
+                continue
             for function in functions:
                 if function != "None":
                     FUNCTION_DICT[function]()

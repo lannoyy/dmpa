@@ -162,6 +162,12 @@
       "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK"],
       "symbol_for_stack": "current_symbol"
     },
+    "q6": {
+      "symbol": " ,)",
+      "function": ["ADD_VARIABLE"],
+      "action_with_stack": ["PUSH_TO_OPERATIONAL_STACK", "PUSH_TO_CYCLE_BREAK_STACK"],
+      "symbol_for_stack": ")"
+    },
     "q8": {
       "symbol": "e",
       "function": ["None"],
