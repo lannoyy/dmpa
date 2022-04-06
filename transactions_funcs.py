@@ -89,6 +89,7 @@ def fourth_rule(code_for_optimization):
 
 def make_operation(operation):
     global index
+
     right = VARIABLES_STORE.pop()
     left = VARIABLES_STORE.pop()
     if operation == "+":
@@ -160,16 +161,20 @@ def optimization():
     print(f"Code after optimization\n{code_for_optimization}") # для наглядности
 
 def finish_function():
-
     add_variable()
     operation = OPERATION_STORE.pop()
     while operation:
-        make_operation(operation)
+        if operation == "+" and OPERATION_STORE[-1] == '*':
+            make_operation(OPERATION_STORE.pop())
+            OPERATION_STORE.append(operation)
+        else:
+            make_operation(operation)
         if not OPERATION_STORE:
             break
         operation = OPERATION_STORE.pop()
     optimization()
     return not CYCLE_BREAK_STORE
+
 
 
 FUNCTION_DICT = {
