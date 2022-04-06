@@ -166,10 +166,16 @@ def optimization():
 
 def finish_function():
     add_variable()
-    while OPERATIONAL_STACK:
-        make_operation()
+    operation = OPERATIONAL_STACK.pop()
+    while operation:
+        if operation == "+" and OPERATIONAL_STACK[-1] == '*':
+            make_operation(OPERATIONAL_STACK.pop())
+            OPERATIONAL_STACK.append(operation)
+        else:
+            make_operation(operation)
         if not OPERATIONAL_STACK:
             break
+        operation = OPERATIONAL_STACK.pop()
     optimization()
     return not CYCLE_BREAK_STACK
 
