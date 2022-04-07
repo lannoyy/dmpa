@@ -101,13 +101,18 @@ def fourth_rule(code_for_optimization):
         fourth_rule = re.findall(fourth_pattern, code_for_optimization)
     return code_for_optimization
 
-def make_operation(operation=None):
+def make_operation(operation=None, move=None):
     if not operation:
         operation = OPERATIONAL_STACK.pop()
     if operation == "(" or operation == ")":
         return
-    right = VARIABLES_STORE.pop()
-    left = VARIABLES_STORE.pop()
+    if move:
+        right = VARIABLES_STORE.pop(-2)
+        left = VARIABLES_STORE.pop(-2)
+    else:
+        right = VARIABLES_STORE.pop()
+        left = VARIABLES_STORE.pop()
+    print(operation, right, left)
     if operation == "+":
         if right.rfind("$") != -1 and left.rfind("$") != -1:
             index = max(int(right[right.rfind("$") + 1]), int(left[left.rfind("$") + 1])) + 1
@@ -169,7 +174,7 @@ def finish_function():
     operation = OPERATIONAL_STACK.pop()
     while operation:
         if operation == "+" and OPERATIONAL_STACK[-1] == '*':
-            make_operation(OPERATIONAL_STACK.pop())
+            make_operation(OPERATIONAL_STACK.pop(), move=-1)
             OPERATIONAL_STACK.append(operation)
         else:
             make_operation(operation)
