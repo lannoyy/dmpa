@@ -25,7 +25,7 @@ def first_rule(code_for_optimization):
                 alfa = i.split(";")[0].split(" ")[1]
                 beta = i.split(";")[1].split(" ")[1]
                 code_for_optimization = code_for_optimization.replace(i, f"LOAD {beta};ADD {alfa};")
-    # print(f"{code_for_optimization} After 1") # для наглядности
+    print(f"{code_for_optimization} After 1") # для наглядности
     return code_for_optimization
 
 def second_rule(code_for_optimization):
@@ -40,7 +40,7 @@ def second_rule(code_for_optimization):
                 alfa = i.split(";")[0].split(" ")[1]
                 beta = i.split(";")[1].split(" ")[1]
                 code_for_optimization = code_for_optimization.replace(i, f"LOAD {beta};MPY {alfa};")
-    # print(f"{code_for_optimization} After 2") # для наглядности
+    print(f"{code_for_optimization} After 2") # для наглядности
     return code_for_optimization
 
 def third_rule(code_for_optimization):
@@ -56,7 +56,7 @@ def third_rule(code_for_optimization):
             if len(list(filter(lambda item: item.split(' ')[1] == i.split(';')[0].split(' ')[1], resultCodeArray))) < 3 \
                     and re.findall(item_pattern, i)[0] == re.findall(item_pattern, i)[1]:
                 code_for_optimization = code_for_optimization.replace(i, '')
-    # print(f"{code_for_optimization} After 3") # для наглядности
+    print(f"{code_for_optimization} After 3") # для наглядности
     return code_for_optimization
 
 def fourth_rule(code_for_optimization):
@@ -87,11 +87,18 @@ def fourth_rule(code_for_optimization):
         fourth_rule = re.findall(fourth_pattern, code_for_optimization)
     return code_for_optimization
 
-def make_operation(operation):
-    global index
-
-    right = VARIABLES_STORE.pop()
-    left = VARIABLES_STORE.pop()
+def make_operation(operation, move=None):
+    if not operation:
+        operation = OPERATION_STORE.pop()
+    if operation == "(" or operation == ")":
+        return
+    if move:
+        right = VARIABLES_STORE.pop(move)
+        left = VARIABLES_STORE.pop(move)
+    else:
+        right = VARIABLES_STORE.pop()
+        left = VARIABLES_STORE.pop()
+    # print(f"right {right}, operation {operation}, left {left}")
     if operation == "+":
         if right.rfind("$") != -1 and left.rfind("$") != -1:
             index = max(int(right[right.rfind("$") + 1]), int(left[left.rfind("$") + 1])) + 1
@@ -114,7 +121,11 @@ def make_operation(operation):
         value = f"{right};STORE ${index};LOAD {left};MPY ${index}"
     elif operation == "=":
         value = f"LOAD {right};STORE {left}"
-    VARIABLE_NAME_STORE.append(value)
+    if move:
+        VARIABLE_NAME_STORE.insert(move, value)
+    else:
+        VARIABLE_NAME_STORE.append(value)
+    # print(f"VARIABLE_NAME_STORE = {VARIABLE_NAME_STORE}\n")
     add_variable()
 
 
@@ -164,8 +175,9 @@ def finish_function():
     add_variable()
     operation = OPERATION_STORE.pop()
     while operation:
-        if operation == "+" and OPERATION_STORE[-1] == '*':
-            make_operation(OPERATION_STORE.pop())
+        if '*' in OPERATION_STORE:
+            move = OPERATION_STORE.index('*')
+            make_operation(OPERATION_STORE.pop(move), move=move)
             OPERATION_STORE.append(operation)
         else:
             make_operation(operation)
