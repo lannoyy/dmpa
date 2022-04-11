@@ -33,4 +33,3 @@ class FSM:
             self.current_state = new_state
             position += 1
         return self.current_state in self.final_states["final_states"] and FUNCTION_DICT["FINISH_FUNCTION"]()
-

@@ -1,5 +1,7 @@
 import re
 
+from error import ValidationError
+
 CYCLE_BREAK_STORE = []
 OPERATION_STORE = []
 VARIABLE_NAME_STORE = []
@@ -84,17 +86,16 @@ def fourth_rule(code_for_optimization):
                         if index_for_while + 1 >= len(temp_code):
                             break
                         another_rule = re.findall(another_pattern, code_for_optimization)
+                    break
         fourth_rule = re.findall(fourth_pattern, code_for_optimization)
     return code_for_optimization
 
 def make_operation(operation, move=None):
-    if not operation:
-        operation = OPERATION_STORE.pop()
     if operation == "(" or operation == ")":
         return
     if move:
-        right = VARIABLES_STORE.pop(move)
         left = VARIABLES_STORE.pop(move)
+        right = VARIABLES_STORE.pop(move)
     else:
         right = VARIABLES_STORE.pop()
         left = VARIABLES_STORE.pop()
@@ -122,9 +123,9 @@ def make_operation(operation, move=None):
     elif operation == "=":
         value = f"LOAD {right};STORE {left}"
     if move:
-        VARIABLE_NAME_STORE.insert(move, value)
+        VARIABLES_STORE.insert(move, value)
     else:
-        VARIABLE_NAME_STORE.append(value)
+        VARIABLES_STORE.append(value)
     # print(f"VARIABLE_NAME_STORE = {VARIABLE_NAME_STORE}\n")
     add_variable()
 
@@ -136,13 +137,21 @@ def add_operation(current_symbol):
     elif current_symbol == "(":
         CYCLE_BREAK_STORE.append(current_symbol)
     elif current_symbol == ")":
-        operation = OPERATION_STORE.pop()
+        if not CYCLE_BREAK_STORE:
+            raise ValidationError("Bracket error")
         CYCLE_BREAK_STORE.pop()
+        operation = ""
         while operation != "(":
-            make_operation(operation)
-            operation = OPERATION_STORE.pop()
-    elif current_symbol == "+" and OPERATION_STORE[-1] == "*":
-        make_operation(OPERATION_STORE.pop())
+            last_bracket = max(num for num, val in enumerate(OPERATION_STORE) if val == "(")
+            if '*' in OPERATION_STORE[last_bracket:]:
+                move = max(num for num, val in enumerate(OPERATION_STORE) if val == "*")
+                operation = OPERATION_STORE.pop(move)
+                make_operation(operation, move - OPERATION_STORE.count('('))
+            else:
+                operation = OPERATION_STORE.pop()
+                make_operation(operation)
+    # elif current_symbol == "+" and OPERATION_STORE[-1] == "*":
+    #     make_operation(OPERATION_STORE.pop())
     if (current_symbol != ')'):
         OPERATION_STORE.append(current_symbol)
 
@@ -173,6 +182,7 @@ def optimization():
 
 def finish_function():
     add_variable()
+    # print(OPERATION_STORE, VARIABLES_STORE)
     operation = OPERATION_STORE.pop()
     while operation:
         if '*' in OPERATION_STORE:
@@ -184,6 +194,8 @@ def finish_function():
         if not OPERATION_STORE:
             break
         operation = OPERATION_STORE.pop()
+    if CYCLE_BREAK_STORE:
+        raise ValidationError("Bracket error")
     optimization()
     return not CYCLE_BREAK_STORE
 

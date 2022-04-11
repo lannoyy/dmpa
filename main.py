@@ -17,4 +17,4 @@ def main(str):
     return (fsm.process_str(str))
 
 if __name__ == "__main__":
-    main("cost = (x+1)*(2*price+tax*3)*0.98+y")
+    main("cost = (x+1)*(2*(price+tax)*3)*0.98+y")
