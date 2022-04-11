@@ -8,6 +8,13 @@ CYCLE_BREAK_STACK = []
 
 
 def add_operation(current_symbol):
+    if current_symbol == "(":
+        CYCLE_BREAK_STACK.append(current_symbol)
+    add_variable()
+    if current_symbol == "+":
+        if len(OPERATIONAL_STACK) >= 2:
+            if OPERATIONAL_STACK[-1] == "*":
+                make_operation(OPERATIONAL_STACK.pop())
     OPERATIONAL_STACK.append(current_symbol)
 
 STACK_DICT = {
@@ -100,8 +107,8 @@ def make_operation(operation=None, move=None):
     if operation == "(" or operation == ")":
         return
     if move:
-        right = VARIABLES_STORE.pop(move)
         left = VARIABLES_STORE.pop(move)
+        right = VARIABLES_STORE.pop(move)
     else:
         right = VARIABLES_STORE.pop()
         left = VARIABLES_STORE.pop()
@@ -152,7 +159,7 @@ def bracket_operation():
         if '*' in OPERATIONAL_STACK[last_bracket:]:
             move = max(loc for loc, val in enumerate(OPERATIONAL_STACK) if val == "*")
             operation = OPERATIONAL_STACK.pop(move)
-            make_operation(operation, move-1)
+            make_operation(operation, move-OPERATIONAL_STACK.count('('))
         else:
             operation = OPERATIONAL_STACK.pop()
             make_operation(operation)
