@@ -8,13 +8,6 @@ CYCLE_BREAK_STACK = []
 
 
 def add_operation(current_symbol):
-    if current_symbol == "(":
-        CYCLE_BREAK_STACK.append(current_symbol)
-    add_variable()
-    if current_symbol == "+":
-            if len(OPERATIONAL_STACK) >= 2:
-                if OPERATIONAL_STACK[-1] == "*":
-                    make_operation(OPERATIONAL_STACK.pop())
     OPERATIONAL_STACK.append(current_symbol)
 
 STACK_DICT = {
@@ -107,12 +100,12 @@ def make_operation(operation=None, move=None):
     if operation == "(" or operation == ")":
         return
     if move:
-        right = VARIABLES_STORE.pop(-2)
-        left = VARIABLES_STORE.pop(-2)
+        right = VARIABLES_STORE.pop(move)
+        left = VARIABLES_STORE.pop(move)
     else:
         right = VARIABLES_STORE.pop()
         left = VARIABLES_STORE.pop()
-    print(operation, right, left)
+    print(f"right {right}, operation {operation}, left {left}")
     if operation == "+":
         if right.rfind("$") != -1 and left.rfind("$") != -1:
             index = max(int(right[right.rfind("$") + 1]), int(left[left.rfind("$") + 1])) + 1
@@ -135,7 +128,10 @@ def make_operation(operation=None, move=None):
         value = f"{right};STORE ${index};LOAD {left};MPY ${index}"
     elif operation == "=":
         value = f"LOAD {right};STORE {left}"
-    VARIABLES_STACK.append(value)
+    if move:
+        VARIABLES_STORE.insert(move, value)
+    else:
+        VARIABLES_STORE.append(value)
     add_variable()
 
 
@@ -149,13 +145,17 @@ def add_variable():
     VARIABLES_STACK.clear()
 
 def bracket_operation():
-    operation = OPERATIONAL_STACK.pop()
-    if operation == ")":
-        CYCLE_BREAK_STACK.pop()
-        operation = OPERATIONAL_STACK.pop()
-        while operation != "(":
-            make_operation(operation)
+    CYCLE_BREAK_STACK.pop()
+    operation = ""
+    while operation != "(":
+        last_bracket = max(loc for loc, val in enumerate(OPERATIONAL_STACK) if val == "(")
+        if '*' in OPERATIONAL_STACK[last_bracket:]:
+            move = max(loc for loc, val in enumerate(OPERATIONAL_STACK) if val == "*")
+            operation = OPERATIONAL_STACK.pop(move)
+            make_operation(operation, move-1)
+        else:
             operation = OPERATIONAL_STACK.pop()
+            make_operation(operation)
 
 
 
@@ -173,8 +173,9 @@ def finish_function():
     add_variable()
     operation = OPERATIONAL_STACK.pop()
     while operation:
-        if operation == "+" and OPERATIONAL_STACK[-1] == '*':
-            make_operation(OPERATIONAL_STACK.pop(), move=-1)
+        if '*' in OPERATIONAL_STACK:
+            move = OPERATIONAL_STACK.index('*')
+            make_operation(OPERATIONAL_STACK.pop(move), move=move)
             OPERATIONAL_STACK.append(operation)
         else:
             make_operation(operation)
