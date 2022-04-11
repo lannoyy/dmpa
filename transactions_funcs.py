@@ -8,13 +8,7 @@ CYCLE_BREAK_STACK = []
 
 
 def add_operation(current_symbol):
-    if current_symbol == "(":
-        CYCLE_BREAK_STACK.append(current_symbol)
     add_variable()
-    if current_symbol == "+":
-        if len(OPERATIONAL_STACK) >= 2:
-            if OPERATIONAL_STACK[-1] == "*":
-                make_operation(OPERATIONAL_STACK.pop())
     OPERATIONAL_STACK.append(current_symbol)
 
 STACK_DICT = {
